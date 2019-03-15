@@ -4,6 +4,9 @@ var hangman = {
   guesses: 13,
   picks: [],
   newWord: "",
+  display: [],
+  blanks: 0,
+  allLetters: [],
 
   pickWord: function() {
     const sportsWords = ['baseball', 'basketball', 'football', 'hockey', 'soccer', 'tennis', 'fumble', 'interception', 'touchdown', 'homerun', 'out', 'strike', 'hit', 'error', 'single', 'double', 'triple', 'free throw', 'slam dunk', 'pass', 'foul', 'technical foul', 'catch', 'field goal', 'punt', 'first down', 'turn over on downs', 'goal', 'penalty kick', 'icing', 'block', 'steal', 'assist', 'love', 'ace']
@@ -15,45 +18,72 @@ var hangman = {
     wordPick();
   },
 
-  winner: function() {
-    var winsElement = document.getElementById("wins");
-    var wins = 0;
-    winsElement.textContent = wins.toString();
+  gameStart: function() {
+
+    this.pickWord();
+    console.log(this.newWord);
+
+    this.allLetters = this.newWord.split("");
+    this.blanks = this.allLetters.length;
+    this.display = [];
+    this.picks = [];
+    this.guesses = 13;
+
+    for (var i = 0; i < this.blanks; i++) {
+      if (this.allLetters[i] !== ' ') {
+        this.display.push("_");
+      } else {
+        this.display.push("&nbsp;");
+      }
+      document.getElementById("guesses").innerHTML = this.guesses;
+      document.getElementById("display").innerHTML = this.display.join("&nbsp;");
+      document.getElementById('picks').innerHTML = this.picks.join(" ");
+    }
   },
-  guessesLeft: function() {
-    if (this.guesses >= 1) {
-      gRemain = this.guesses - this.picks.length;
-      if (gRemain <= 0) {
-        alert("YOU LOSE!");
+
+  chooseLetter: function(letter) {
+
+    var letterConfirm = false;
+
+    for (var i = 0; i < this.blanks; i++) {
+      if (this.newWord[i] === letter) {
+        letterConfirm = true;
+      }
+    }
+
+    if (letterConfirm) {
+
+      for (var i = 0; i < this.blanks; i++) {
+
+        if (this.newWord[i] === letter) {
+          this.display[i] = letter;
+        }
       }
     } else {
-      alert("YOU LOSE!");
+      this.picks.push(letter);
+      this.guesses--;
     }
   },
 
-  chooseLetter: function(userChoice) {
+  nextRound: function() {
 
-    var targetDiv = document.getElementById("picks");
-    this.picks.push(userChoice);
-    for (var i = 0; i < this.picks.length; i++) {
-      var listItem = document.createElement("li");
-      listItem.textContent = this.picks[i];
-      targetDiv.appendChild(listItem);
+    document.getElementById("guesses").innerHTML = this.guesses;
+    document.getElementById("display").innerHTML = this.display.join(" ");
+    document.getElementById("picks").innerHTML = this.picks.join(" ");
+
+    if (this.allLetters.toString() == this.display.toString()) {
+      this.wins++;
+      alert(`WINNER WINNER CHICKEN DINNER! "${this.newWord}" is correct`);
+      document.getElementById("wins").innerHTML = this.wins;
+      this.gameStart();
+    } else if (this.guesses == 0) {
+      alert(`Oh noes, you lose. The word was ${this.newWord}`);
+      this.gameStart();
     }
-  },
-
-  wordPrint: function() {
-    var wordDiv = document.getElementById("worddd")
-    var wordSpace = this.newWord.split("_");
-    var wordDisp = document.createElement("li");
-    wordDisp.textContent = wordSpace;
-    wordDiv.appendChild(wordDisp);
   }
-};
+}
 
-hangman.pickWord();
-
-hangman.wordPrint();
+hangman.gameStart();
 
 document.onkeyup = function(event) {
 
@@ -62,6 +92,5 @@ document.onkeyup = function(event) {
   if (hangman.picks.indexOf(userChoice) === -1) {
     hangman.chooseLetter(userChoice);
   }
+  hangman.nextRound();
 }
-
-// var strsplit = string.split("");
