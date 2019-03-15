@@ -9,7 +9,7 @@ var hangman = {
   allLetters: [],
 
   pickWord: function() {
-    const sportsWords = ['baseball', 'basketball', 'football', 'hockey', 'soccer', 'tennis', 'fumble', 'interception', 'touchdown', 'homerun', 'out', 'strike', 'hit', 'error', 'single', 'double', 'triple', 'free throw', 'slam dunk', 'pass', 'foul', 'technical foul', 'catch', 'field goal', 'punt', 'first down', 'turn over on downs', 'goal', 'penalty kick', 'icing', 'block', 'steal', 'assist', 'love', 'ace']
+    const sportsWords = ['baseball', 'basketball', 'football', 'hockey', 'soccer', 'tennis', 'fumble', 'interception', 'touchdown', 'homerun', 'out', 'strike', 'hit', 'error', 'single', 'double', 'triple', 'freethrow', 'slamdunk', 'pass', 'foul', 'technical', 'catch', 'fieldgoal', 'punt', 'firstdown', 'goal', 'penalty', 'icing', 'block', 'steal', 'assist', 'love', 'ace']
 
     const wordPick = () => {
       var wordIndex = Math.floor(Math.random() * sportsWords.length);
@@ -21,7 +21,7 @@ var hangman = {
   gameStart: function() {
 
     this.pickWord();
-    console.log(this.newWord);
+    // console.log(this.newWord);
 
     this.allLetters = this.newWord.split("");
     this.blanks = this.allLetters.length;
